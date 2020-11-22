@@ -20,7 +20,7 @@ draw()
 function init() {
     // set up webgl renderer
     renderer = new THREE.WebGLRenderer({
-        antialias: true
+        antialias: false
     })
     renderer.setSize(window.innerWidth, window.innerHeight)
     document.body.appendChild(renderer.domElement)

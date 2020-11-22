@@ -2,7 +2,7 @@ import * as THREE from "../lib/three.module.js"
 
 const loader = new THREE.TextureLoader()
 
-const dirt = loader.load("../assets/dirt.png")
+const dirt = loader.load("../assets/gold_ore.png")
 dirt.minFilter = THREE.NearestMipMapNearestFilter
 dirt.magFilter = THREE.NearestFilter
 dirt.generateMipmaps = true
