@@ -1,13 +1,18 @@
 import * as THREE from "../lib/three.module.js"
 import {
-    OrbitControls,
-} from "../lib/OrbitControls.js"
+    PointerLockControls
+} from "../lib/PointerLockControls.js"
 import Stats from "../lib/stats.module.js"
 import buildChunkMesh from "./chunk.js"
 
-const FOV = 75
 let camera, scene, renderer
 let stats, controls, socket
+
+let moveFoward = false
+let moveBackward = false
+let moveLeft = false
+let moveRight = false
+let zoom = false
 
 init()
 draw()
@@ -24,11 +29,15 @@ function init() {
     scene = new THREE.Scene()
 
     // set up camera
-    camera = new THREE.PerspectiveCamera(FOV, window.innerWidth / window.innerHeight, 0.1, 10000)
+    camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 10000)
     camera.position.z = 2
+    camera.getWorldDirection
 
     // set up controls
-    controls = new OrbitControls(camera, renderer.domElement);
+    controls = new PointerLockControls(camera, renderer.domElement)
+    document.addEventListener("click", () => {
+        controls.lock()
+    }, false)
 
     // set up stats
     stats = new Stats()
@@ -46,9 +55,34 @@ function init() {
 function draw() {
     requestAnimationFrame(draw) // recursively call itself 60 times per second
 
-    controls.update()
-    renderer.render(scene, camera)
+    let direction = new THREE.Vector3()
+    camera.getWorldDirection(direction)
 
+    if (moveFoward) {
+        camera.position.add(direction)
+    }
+
+    if (moveLeft) {
+        controls.moveRight(-1)
+    }
+
+    if (moveBackward) {
+        camera.position.add(direction.multiplyScalar(-1))
+    }
+
+    if (moveRight) {
+        controls.moveRight(1)
+    }
+
+    if (zoom) {
+        camera.fov = 20
+        camera.updateProjectionMatrix()
+    } else {
+        camera.fov = 90
+        camera.updateProjectionMatrix()
+    }
+
+    renderer.render(scene, camera)
     stats.update()
 }
 
@@ -65,4 +99,44 @@ socket.onmessage = (event) => {
     //console.log(chunk)
     const mesh = buildChunkMesh(chunk, 16)
     scene.add(mesh)
+}
+
+document.onkeydown = (event) => {
+    switch (event.key) {
+        case "w":
+            moveFoward = true
+            break
+        case "a":
+            moveLeft = true
+            break
+        case "s":
+            moveBackward = true
+            break
+        case "d":
+            moveRight = true
+            break
+        case "c":
+            zoom = true
+            break
+    }
+}
+
+document.onkeyup = (event) => {
+    switch (event.key) {
+        case "w":
+            moveFoward = false
+            break
+        case "a":
+            moveLeft = false
+            break
+        case "s":
+            moveBackward = false
+            break
+        case "d":
+            moveRight = false
+            break
+        case "c":
+            zoom = false
+            break
+    }
 }
