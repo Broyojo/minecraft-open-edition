@@ -20,7 +20,7 @@ draw()
 function init() {
     // set up webgl renderer
     renderer = new THREE.WebGLRenderer({
-        antialias: false
+        antialias: true
     })
     renderer.setSize(window.innerWidth, window.innerHeight)
     document.body.appendChild(renderer.domElement)
@@ -54,34 +54,7 @@ function init() {
 
 function draw() {
     requestAnimationFrame(draw) // recursively call itself 60 times per second
-
-    let direction = new THREE.Vector3()
-    camera.getWorldDirection(direction)
-
-    if (moveFoward) {
-        camera.position.add(direction)
-    }
-
-    if (moveLeft) {
-        controls.moveRight(-1)
-    }
-
-    if (moveBackward) {
-        camera.position.add(direction.multiplyScalar(-1))
-    }
-
-    if (moveRight) {
-        controls.moveRight(1)
-    }
-
-    if (zoom) {
-        camera.fov = 20
-        camera.updateProjectionMatrix()
-    } else {
-        camera.fov = 90
-        camera.updateProjectionMatrix()
-    }
-
+    checkKeys()
     renderer.render(scene, camera)
     stats.update()
 }
@@ -138,5 +111,33 @@ document.onkeyup = (event) => {
         case "c":
             zoom = false
             break
+    }
+}
+
+function checkKeys() {
+    let direction = new THREE.Vector3()
+    camera.getWorldDirection(direction)
+    if (moveFoward) {
+        camera.position.add(direction)
+    }
+
+    if (moveLeft) {
+        controls.moveRight(-1)
+    }
+
+    if (moveBackward) {
+        camera.position.add(direction.multiplyScalar(-1))
+    }
+
+    if (moveRight) {
+        controls.moveRight(1)
+    }
+
+    if (zoom) {
+        camera.fov = 20
+        camera.updateProjectionMatrix()
+    } else {
+        camera.fov = 90
+        camera.updateProjectionMatrix()
     }
 }

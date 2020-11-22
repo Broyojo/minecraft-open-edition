@@ -1,9 +1,12 @@
 import * as THREE from "../lib/three.module.js"
 
-const texture = new THREE.TextureLoader().load("../assets/dirt.png")
-texture.minFilter = THREE.NearestMipMapNearestFilter
-texture.magFilter = THREE.NearestFilter
-texture.generateMipmaps = true
+const loader = new THREE.TextureLoader()
+
+const dirt = loader.load("../assets/dirt.png")
+dirt.minFilter = THREE.NearestMipMapNearestFilter
+dirt.magFilter = THREE.NearestFilter
+dirt.generateMipmaps = true
+
 
 const blockDirections = [
     [0, 0, 1], // front
@@ -151,10 +154,13 @@ export default function buildChunkMesh(chunk, size) {
     geometry.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(uvs), 2))
     geometry.setIndex(indices)
 
-    const material = new THREE.MeshBasicMaterial({
-        map: texture,
+
+    var material = new THREE.MeshBasicMaterial({
+        map: dirt,
         wireframe: false
     })
+
+
     const mesh = new THREE.Mesh(geometry, material)
     return mesh
 }

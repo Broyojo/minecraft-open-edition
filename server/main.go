@@ -34,15 +34,15 @@ func serveWebsocket(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	for y := 0; y < 16; y++ {
-		for x := 0; x < 16; x++ {
-			for z := 0; z < 16; z++ {
+	for y := 0; y < 1; y++ {
+		for x := 0; x < 65; x++ {
+			for z := 0; z < 65; z++ {
 				start := time.Now()
 				c := voxel.NewChunk(x, y, z)
 				/*c.Map(func(x, y, z int) voxel.Block {
 					return voxel.Stone
 				})*/
-				c.SimplexOctave(seed, 10, 0.06, 1, 0.5, 0.5)
+				c.SimplexOctave2d(seed, 16, 0.05, 1, 0.5, 2)
 				log.Println("took:", time.Since(start))
 				if err := conn.WriteJSON(c); err != nil {
 					log.Println(err)
