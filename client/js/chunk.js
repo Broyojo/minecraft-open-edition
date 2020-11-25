@@ -1,12 +1,10 @@
-import * as THREE from "../lib/three.module.js"
+import * as THREE from "https://threejs.org/build/three.module.js"
 
 const loader = new THREE.TextureLoader()
-
-const dirt = loader.load("../assets/gold_ore.png")
-dirt.minFilter = THREE.NearestMipMapNearestFilter
-dirt.magFilter = THREE.NearestFilter
-dirt.generateMipmaps = true
-
+const texture = loader.load("../assets/tester.png")
+texture.encoding = THREE.sRGBEncoding
+texture.minFilter = THREE.NearestFilter
+texture.magFilter = THREE.NearestFilter
 
 const blockDirections = [
     [0, 0, 1], // front
@@ -120,7 +118,7 @@ export default function buildChunkMesh(chunk, size) {
         return chunk.Blocks[x][y][z] != 0
     }
 
-    const start = performance.now()
+    //const start = performance.now()
     let positions = []
     let indices = []
     let normals = []
@@ -153,14 +151,17 @@ export default function buildChunkMesh(chunk, size) {
     geometry.setAttribute("normal", new THREE.BufferAttribute(new Float32Array(normals), 3))
     geometry.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(uvs), 2))
     geometry.setIndex(indices)
+    geometry.computeBoundingBox();
 
 
     var material = new THREE.MeshBasicMaterial({
-        map: dirt,
-        wireframe: false
+        map: texture,
+        wireframe: false,
+        transparent: true,
     })
 
-
     const mesh = new THREE.Mesh(geometry, material)
+
+    console.log(mesh.geometry.boundingBox, mesh.geometry.uuid, mesh.geometry.id)
     return mesh
 }

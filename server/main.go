@@ -34,14 +34,16 @@ func serveWebsocket(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	for y := 0; y < 16; y++ {
-		for x := 0; x < 16; x++ {
-			for z := 0; z < 16; z++ {
+	for y := 0; y < 10; y++ {
+		for x := 0; x < 20; x++ {
+			for z := 0; z < 20; z++ {
 				start := time.Now()
 				c := voxel.NewChunk(x, y, z)
 
-				c.SimplexOctave3D(seed, 16, 0.05, 1, 0.5, 2)
-
+				//c.SimplexOctave3D(seed, 16, 0.05, 1, 0.5, 2)
+				c.Map(func(x, y, z int) voxel.Block {
+					return voxel.Dirt
+				})
 				//c.Blocks[0][0][0] = voxel.Dirt
 
 				log.Println("took:", time.Since(start))

@@ -68,7 +68,8 @@ func (c *Chunk) SimplexOctave3D(seed int64, iter int, freq, amp, pers, lanc floa
 	})
 }
 
-func (c *Chunk) Simplex2d(seed int64, freq, amp float64) {
+// Simplex2D - generates the chunk with 2d simplex noise
+func (c *Chunk) Simplex2D(seed int64, freq, amp float64) {
 	noise := noise.New(seed)
 	c.Map(func(x, y, z int) Block {
 		value := amp * noise.Eval2(float64(x+c.X*16)*freq, float64(z+c.Z*16)*freq)
@@ -81,7 +82,8 @@ func (c *Chunk) Simplex2d(seed int64, freq, amp float64) {
 	})
 }
 
-func (c *Chunk) SimplexOctave2d(seed int64, iter int, freq, amp, pers, lanc float64) {
+// SimplexOctave2D - generates the chunk with 2d ocatve simplex noise
+func (c *Chunk) SimplexOctave2D(seed int64, iter int, freq, amp, pers, lanc float64) {
 	var data [ChunkSize][ChunkSize]float64
 	noise := noise.New(seed)
 	for x := 0; x < ChunkSize; x++ {
